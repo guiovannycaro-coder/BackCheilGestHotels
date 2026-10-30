@@ -37,3 +37,18 @@ Usuario	3	Navegación y consulta de hoteles
 Comportamiento inicial: al ejecutar la aplicación, Angular utiliza /login como ruta predeterminada. Una vez autenticado, el usuario accede a las funcionalidades correspondientes a su rol. Los usuarios de consulta también pueden acceder directamente a /inicio.
 
 Nota técnica: ambas interfaces pertenecen a la misma aplicación Angular y consumen el mismo backend REST desarrollado en .NET Core. La separación de funcionalidades se realiza mediante las rutas y los permisos asignados a cada rol.
+
+por favor no olvidar configurar el archivo appsettings.json para que se pueda conectar a la base de datos ya que esta con la configuracion de mi bd loccal mia
+
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "AllowedHosts": "*",
+  "ConnectionStrings": {
+    "DefaultConnection": "Host=localhost;Port=5432;Database=gestionHotelsDB;Username=postgres;Password=Admin123;"
+  }
+}
