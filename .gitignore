@@ -1,0 +1,17 @@
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Compilación .NET
+[Bb]in/
+[Oo]bj/
+
+# Archivos temporales
+*.log
+*.tmp
+
+# NuGet
+*.nupkg
