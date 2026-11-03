@@ -58,11 +58,11 @@ namespace BackCheilGestHotels.api.controllers
 
         [HttpGet("ObtenerPorName")]
         [Produces("application/json")]
-        public IActionResult GetRolesByName([FromQuery] string name)
+        public IActionResult GetRolesByName([FromQuery] string dato)
         {
             try
             {
-                List<RolesDto> roles = _rolesService.GetRolesByName(name);
+                List<RolesDto> roles = _rolesService.GetRolesByName(dato);
 
                 return Ok(new ApisResponse<List<RolesDto>>(
                     0,
@@ -92,11 +92,11 @@ namespace BackCheilGestHotels.api.controllers
 
         [HttpGet("ObtenerPorId")]
         [Produces("application/json")]
-        public IActionResult GetRoleById([FromQuery] int rolId)
+        public IActionResult GetRoleById([FromQuery] int dato)
         {
             try
             {
-                List<RolesDto> roles = _rolesService.GetRolesById(rolId);
+                List<RolesDto> roles = _rolesService.GetRolesById(dato);
 
                 if (roles == null || roles.Count == 0)
                 {
@@ -207,7 +207,7 @@ namespace BackCheilGestHotels.api.controllers
                 {
                     return BadRequest(new ApisResponse<string>(
                         400,
-                        "The route ID does not match the role ID in the request body.",
+                        "A valid role ID is required. ",
                         null
                     ));
                 }
@@ -252,11 +252,11 @@ namespace BackCheilGestHotels.api.controllers
       
         [HttpDelete("DeleteRol")]
         [Produces("application/json")]
-        public IActionResult DeleteRole([FromQuery] int rolId)
+        public IActionResult DeleteRole([FromQuery] int dato)
         {
             try
             {
-                bool deleted = _rolesService.DropRolById(rolId);
+                bool deleted = _rolesService.DropRolById(dato);
 
                 if (!deleted)
                 {
