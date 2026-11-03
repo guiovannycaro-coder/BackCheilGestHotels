@@ -152,7 +152,7 @@ namespace BackCheilGestHotels.api.controllers
                         null));
                 }
 
-                if (string.IsNullOrWhiteSpace(documentType.TipIsActive))
+                if (documentType.TipIsActive == null)
                 {
                     return BadRequest(new ApisResponse<string>(
                         400,
@@ -223,7 +223,7 @@ namespace BackCheilGestHotels.api.controllers
                         null));
                 }
 
-                if (string.IsNullOrWhiteSpace(documentType.TipIsActive))
+                if (documentType.TipIsActive == null)
                 {
                     return BadRequest(new ApisResponse<string>(
                         400,

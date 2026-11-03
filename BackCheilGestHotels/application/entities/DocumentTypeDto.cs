@@ -6,6 +6,6 @@
 
         public string? TipDescription { get; set; }
 
-        public string? TipIsActive { get; set; }
+        public bool? TipIsActive { get; set; }
     }
 }

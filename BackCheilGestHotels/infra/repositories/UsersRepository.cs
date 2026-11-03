@@ -59,10 +59,9 @@ namespace BackCheilGestHotels.infra.repositories
                             TipDescription = reader.IsDBNull(8)
                                 ? null!
                                 : reader.GetString(8),
-
                             TipIsActive = reader.IsDBNull(9)
-                                ? null
-                                : reader.GetString(9)
+                             ? null
+                            : reader.GetBoolean(9)
                         };
                     }
 
@@ -279,7 +278,7 @@ namespace BackCheilGestHotels.infra.repositories
                 Console.WriteLine($"ID del rol asignado: {user.usuRolId}");
                 Console.WriteLine("=====================================");
 
-                
+
                 return $"User successfully created. ID: {id}";
             }
             catch (NpgsqlException ex)
@@ -288,7 +287,7 @@ namespace BackCheilGestHotels.infra.repositories
                     500, "Error inserting user.", ex);
             }
         }
-        
+
         public string UpdUsuarios(UsersDto user)
         {
             try
@@ -329,9 +328,9 @@ namespace BackCheilGestHotels.infra.repositories
                 Console.WriteLine($"ID del rol asignado: {user.usuRolId}");
                 Console.WriteLine("=====================================");
 
-                    return result != null
-                    ? $"User with ID {user.UsuId} successfully updated."
-                    : $"User with ID {user.UsuId} was not found.";
+                return result != null
+                ? $"User with ID {user.UsuId} successfully updated."
+                : $"User with ID {user.UsuId} was not found.";
             }
             catch (NpgsqlException ex)
             {
@@ -424,32 +423,48 @@ namespace BackCheilGestHotels.infra.repositories
         {
             DocumentTypeDto? documentType = null;
 
-            if (!reader.IsDBNull(8))
+            // DocumentType comienza en el índice 9
+            if (!reader.IsDBNull(9))
             {
                 documentType = new DocumentTypeDto
                 {
-                    TipId = reader.GetInt32(8),
-                    TipDescription = reader.IsDBNull(9)
+                    TipId = reader.GetInt32(9),
+
+                    TipDescription = reader.IsDBNull(10)
                         ? null!
-                        : reader.GetString(9),
-                    TipIsActive = reader.IsDBNull(10)
-                        ? null!
-                        : reader.GetString(10)
+                        : reader.GetString(10),
+                     TipIsActive = reader.IsDBNull(11)
+                         ? null
+                        : reader.GetBoolean(11)
                 };
             }
 
             return new UsersDto
             {
                 UsuId = reader.GetInt32(0),
-                UsuNames = reader.IsDBNull(1) ? null : reader.GetString(1),
-                UsuAddress = reader.IsDBNull(2) ? null : reader.GetString(2),
-                UsuPhone = reader.IsDBNull(3) ? null : reader.GetString(3),
-                UsuEmail = reader.IsDBNull(4) ? null : reader.GetString(4),
-                UsuDocumentId = reader.IsDBNull(5) ? null : reader.GetString(5),
 
-                // No devolver la contraseña en las consultas de lectura.
-                UsuPassword = reader.IsDBNull(6)
-        ? null : reader.GetString(6),
+                UsuNames = reader.IsDBNull(1)
+                    ? null!
+                    : reader.GetString(1),
+
+                UsuAddress = reader.IsDBNull(2)
+                    ? null!
+                    : reader.GetString(2),
+
+                UsuPhone = reader.IsDBNull(3)
+                    ? null!
+                    : reader.GetString(3),
+
+                UsuEmail = reader.IsDBNull(4)
+                    ? null!
+                    : reader.GetString(4),
+
+                UsuDocumentId = reader.IsDBNull(5)
+                    ? null!
+                    : reader.GetString(5),
+
+                // No devolver la contraseña en consultas
+                UsuPassword = null!,
 
                 UsuTdocId = reader.IsDBNull(7)
                     ? null
@@ -460,8 +475,9 @@ namespace BackCheilGestHotels.infra.repositories
                     : reader.GetInt32(8),
 
                 DocumentType = documentType,
-                UsuIsActive = reader.GetBoolean(11)
+
+                UsuIsActive = reader.GetBoolean(12)
             };
         }
-    } 
+    }
 }

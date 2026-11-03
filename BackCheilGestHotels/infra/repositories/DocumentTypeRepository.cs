@@ -280,7 +280,7 @@ namespace BackCheilGestHotels.infra.repositories
                     ? null!
                     : reader.GetString(1),
 
-                TipIsActive = reader.GetString(2)
+                TipIsActive = reader.GetBoolean(2)
             };
         }
     }
