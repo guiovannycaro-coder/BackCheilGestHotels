@@ -131,14 +131,56 @@ namespace BackCheilGestHotels.api.controllers
             }
         }
 
+
+        [HttpGet("ObtenerDescripcionID")]
+        [Produces("application/json")]
+        public IActionResult GetRoleDescriptionId([FromQuery] int dato)
+        {
+            try
+            {
+                String roles = _rolesService.GetRolDescription(dato);
+
+                if (roles == null )
+                {
+                    return NotFound(new ApisResponse<string>(
+                        404,
+                        "Role not found.",
+                        null
+                    ));
+                }
+
+                return Ok(new ApisResponse<string>(
+                    0,
+                    "Role retrieved successfully.",
+                    roles
+                ));
+            }
+            catch (BackCheilGestHotelException ex)
+            {
+                return StatusCode(500, new ApisResponse<string>(
+                    500,
+                    ex.Message,
+                    null
+                ));
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, new ApisResponse<string>(
+                    500,
+                    "An unexpected error occurred while retrieving the role.",
+                    null
+                ));
+            }
+        }
+
         // GET: api/gestHotel/Roles/search/Admin
         // Buscar roles por nombre
-   
-        
+
+
 
         // POST: api/gestHotel/Roles
         // Crear un rol
-      
+
         [HttpPost("InsertarRol")]
         [Produces("application/json")]
         public IActionResult CreateRole([FromBody] RolesDto role)

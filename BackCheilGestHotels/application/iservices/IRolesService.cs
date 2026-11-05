@@ -10,5 +10,7 @@ namespace BackCheilGestHotels.application.iservices
         bool DropRolById(int dato);
         List<RolesDto> GetRolesById(int dato);
         List<RolesDto> GetRolesByName(string dato);
+
+        string? GetRolDescription(int dato);
     }
 }

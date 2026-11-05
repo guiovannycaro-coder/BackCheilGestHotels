@@ -287,6 +287,40 @@ namespace BackCheilGestHotels.infra.repositories
                 CityidDepartament = reader.GetInt32(2)
             };
         }
+
+        public string? GetCityDescription(int dato)
+        {
+            try
+            {
+
+                const string sql = @"
+                    SELECT  cityname
+                    FROM public.geshCity
+                    WHERE cityid = @cityId;";
+
+                using var connection = _database.GetConnection();
+                using var command = new NpgsqlCommand(sql, connection);
+
+                command.Parameters.AddWithValue("cityId", dato);
+
+                using var reader = command.ExecuteReader();
+
+                if (!reader.Read())
+                {
+                    return null;
+                }
+
+                return reader.IsDBNull(0) ? null : reader.GetString(0);
+            }
+            catch (NpgsqlException ex)
+            {
+                throw new BackCheilGestHotelException(
+                    500,
+                    "Error retrieving city description.",
+                    ex
+                );
+            }
+        }
     }
 }
 

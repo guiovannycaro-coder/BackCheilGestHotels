@@ -224,6 +224,40 @@ namespace BackCheilGestHotels.infra.repositories
                     500, "Error deleting role.", ex);
             }
         }
+
+        public string? GetRolDescription(int dato)
+        {
+            try
+            {
+                const string sql = """
+            SELECT rolname
+            FROM geshroles
+            WHERE rolid = @roleId;
+            """;
+
+                using var connection = _database.GetConnection();
+                using var command = new NpgsqlCommand(sql, connection);
+
+                command.Parameters.AddWithValue("roleId", dato);
+
+                using var reader = command.ExecuteReader();
+
+                if (!reader.Read())
+                {
+                    return null;
+                }
+
+                return reader.IsDBNull(0) ? null : reader.GetString(0);
+            }
+            catch (NpgsqlException ex)
+            {
+                throw new BackCheilGestHotelException(
+                    500,
+                    "Error retrieving role description.",
+                    ex
+                );
+            }
+        }
     }
 
 }

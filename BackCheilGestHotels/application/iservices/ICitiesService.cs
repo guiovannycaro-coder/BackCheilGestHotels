@@ -10,5 +10,6 @@ namespace BackCheilGestHotels.application.iservices
         bool DropCityById(int dato);
         List<CityDto> GetCityById(int dato);
         List<CityDto> GetCityByName(string dato);
+        public string? GetCityDescription(int dato);
     }
 }

@@ -17,5 +17,7 @@ namespace BackCheilGestHotels.Domain.repository
         String UpdCity(CityDto city);
 
         String DropCityById(int cityId);
+
+        string? GetCityDescription(int dato);
     }
 }

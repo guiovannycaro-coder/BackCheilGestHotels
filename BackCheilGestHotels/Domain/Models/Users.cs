@@ -24,9 +24,10 @@ namespace BackCheilGestHotels.Domain.Models
         public bool UsuIsActive { get; set; } 
 
         
-        public DocumentTypeDto DocumentType { get; set; }
+        public DocumentTypeDto? DocumentType { get; set; }
 
-     
+        public RolesDto? Roles { get; set; }
+
 
 
     }

@@ -1,5 +1,6 @@
 ﻿using BackCheilGestHotels.application.entities;
 using BackCheilGestHotels.application.iservices;
+using BackCheilGestHotels.application.services;
 using BackCheilGestHotels.Domain.Models;
 using BackCheilGestHotels.infra.Exceptions;
 using Microsoft.AspNetCore.Mvc;
@@ -315,6 +316,49 @@ namespace BackCheilGestHotels.api.controllers
                         "An unexpected error occurred while deleting the city.",
                         null
                     ));
+            }
+        }
+
+
+
+        [HttpGet("ObtenerDescripcionID")]
+        [Produces("application/json")]
+        public IActionResult GetRoleDescriptionId([FromQuery] int dato)
+        {
+            try
+            {
+                String city = _cityService.GetCityDescription(dato);
+
+                if (city == null)
+                {
+                    return NotFound(new ApisResponse<string>(
+                        404,
+                        "city not found.",
+                        null
+                    ));
+                }
+
+                return Ok(new ApisResponse<string>(
+                    0,
+                    "city retrieved successfully.",
+                    city
+                ));
+            }
+            catch (BackCheilGestHotelException ex)
+            {
+                return StatusCode(500, new ApisResponse<string>(
+                    500,
+                    ex.Message,
+                    null
+                ));
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, new ApisResponse<string>(
+                    500,
+                    "An unexpected error occurred while retrieving the city.",
+                    null
+                ));
             }
         }
     }

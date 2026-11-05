@@ -10,5 +10,7 @@ namespace BackCheilGestHotels.application.iservices
         bool DropDocumentTypeById(int dato);
         List<DocumentTypeDto> GetDocumentTypeById(int dato);
         List<DocumentTypeDto> GetDocumentTypeByName(string dato);
+
+        public string? GetDocumentTypeDescription(int dato);
     }
 }

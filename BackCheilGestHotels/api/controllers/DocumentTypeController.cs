@@ -1,5 +1,6 @@
 ﻿using BackCheilGestHotels.application.entities;
 using BackCheilGestHotels.application.iservices;
+using BackCheilGestHotels.application.services;
 using BackCheilGestHotels.Domain.Models;
 using BackCheilGestHotels.infra.Exceptions;
 using Microsoft.AspNetCore.Mvc;
@@ -303,5 +304,48 @@ namespace BackCheilGestHotels.api.controllers
                         null));
             }
         }
+
+
+        [HttpGet("ObtenerDescripcionID")]
+        [Produces("application/json")]
+        public IActionResult GetDocumentTypeDescriptionId([FromQuery] int dato)
+        {
+            try
+            {
+                String dt = _documentTypeService.GetDocumentTypeDescription(dato);
+
+                if (dt == null)
+                {
+                    return NotFound(new ApisResponse<string>(
+                        404,
+                        "Document type not found.",
+                        null
+                    ));
+                }
+
+                return Ok(new ApisResponse<string>(
+                    0,
+                    "Document type retrieved successfully.",
+                    dt
+                ));
+            }
+            catch (BackCheilGestHotelException ex)
+            {
+                return StatusCode(500, new ApisResponse<string>(
+                    500,
+                    ex.Message,
+                    null
+                ));
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, new ApisResponse<string>(
+                    500,
+                    "An unexpected error occurred while retrieving the Document type.",
+                    null
+                ));
+            }
+        }
+
     }
 }

@@ -283,5 +283,40 @@ namespace BackCheilGestHotels.infra.repositories
                 TipIsActive = reader.GetBoolean(2)
             };
         }
+
+        public string? GetDocumentTypeDescription(int dato)
+        {
+            try
+            {
+               
+
+                string query = @"
+                    SELECT  tipDescription
+                    FROM public.documentType
+                    WHERE tipId = @tipId;";
+
+                using var connection = _database.GetConnection();
+                using var command = new NpgsqlCommand(query, connection);
+
+                command.Parameters.AddWithValue("tipId", dato);
+
+                using var reader = command.ExecuteReader();
+
+                if (!reader.Read())
+                {
+                    return null;
+                }
+
+                return reader.IsDBNull(0) ? null : reader.GetString(0);
+            }
+            catch (NpgsqlException ex)
+            {
+                throw new BackCheilGestHotelException(
+                    500,
+                    "Error retrieving role description.",
+                    ex
+                );
+            }
+        }
     }
 }

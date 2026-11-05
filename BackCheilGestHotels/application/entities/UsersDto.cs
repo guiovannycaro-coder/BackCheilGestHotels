@@ -24,9 +24,6 @@
 
         
         public DocumentTypeDto? DocumentType { get; set; }
-
-      
-
-
+        public RolesDto? Roles { get; internal set; }
     }
 }

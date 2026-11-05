@@ -16,5 +16,7 @@ namespace BackCheilGestHotels.Domain.repository
 
         List<RolesDto> GetRolesByNameAsync(string name);
 
+        string? GetRolDescription(int dato);
+
     }
 }

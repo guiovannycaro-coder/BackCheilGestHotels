@@ -1,4 +1,5 @@
-﻿using BackCheilGestHotels.application.entities;
+﻿
+using BackCheilGestHotels.application.entities;
 using BackCheilGestHotels.Domain.repository;
 using BackCheilGestHotels.infra.Exceptions;
 using BackCheilGestHotels.infra.Persistence;
@@ -25,11 +26,25 @@ namespace BackCheilGestHotels.infra.repositories
                 using var connection = _database.GetConnection();
 
                 string query = @"
-                    SELECT hotId, hotName, hotDescription, hotAddress,
-                           hotPhone, hotEmail, hotCityId, hotRating,
-                           hotRateSign, hotIsActive,hotImages
-                    FROM public.geshHotels
-                    ORDER BY hotId;";
+                    SELECT
+                        h.hotId,
+                        h.hotName,
+                        h.hotDescription,
+                        h.hotAddress,
+                        h.hotPhone,
+                        h.hotEmail,
+                        h.hotCityId,
+                        h.hotRating,
+                        h.hotRateSign,
+                        h.hotIsActive,
+                        h.hotImages,
+                        ci.cityid,
+                        ci.cityname,
+                        ci.cityiddepartament
+                    FROM public.geshHotels h
+                    LEFT JOIN public.geshcity ci
+                        ON h.hotCityId = ci.cityid
+                    ORDER BY h.hotId;";
 
                 using var command = new NpgsqlCommand(query, connection);
                 using var reader = command.ExecuteReader();
@@ -60,13 +75,28 @@ namespace BackCheilGestHotels.infra.repositories
                 using var connection = _database.GetConnection();
 
                 string query = @"
-                    SELECT hotId, hotName, hotDescription, hotAddress,
-                           hotPhone, hotEmail, hotCityId, hotRating,
-                           hotRateSign, hotIsActive,hotImages
-                    FROM public.geshHotels
-                    WHERE hotId = @hotId;";
+                    SELECT
+                        h.hotId,
+                        h.hotName,
+                        h.hotDescription,
+                        h.hotAddress,
+                        h.hotPhone,
+                        h.hotEmail,
+                        h.hotCityId,
+                        h.hotRating,
+                        h.hotRateSign,
+                        h.hotIsActive,
+                        h.hotImages,
+                        ci.cityid,
+                        ci.cityname,
+                        ci.cityiddepartament
+                    FROM public.geshHotels h
+                    LEFT JOIN public.geshcity ci
+                        ON h.hotCityId = ci.cityid
+                    WHERE h.hotId = @hotId;";
 
                 using var command = new NpgsqlCommand(query, connection);
+
                 command.Parameters.AddWithValue("@hotId", hotId);
 
                 using var reader = command.ExecuteReader();
@@ -99,14 +129,29 @@ namespace BackCheilGestHotels.infra.repositories
                 using var connection = _database.GetConnection();
 
                 string query = @"
-                    SELECT hotId, hotName, hotDescription, hotAddress,
-                           hotPhone, hotEmail, hotCityId, hotRating,
-                           hotRateSign, hotIsActive,hotImages
-                    FROM public.geshHotels
-                    WHERE hotCityId = @cityId
-                    ORDER BY hotName;";
+                    SELECT
+                        h.hotId,
+                        h.hotName,
+                        h.hotDescription,
+                        h.hotAddress,
+                        h.hotPhone,
+                        h.hotEmail,
+                        h.hotCityId,
+                        h.hotRating,
+                        h.hotRateSign,
+                        h.hotIsActive,
+                        h.hotImages,
+                        ci.cityid,
+                        ci.cityname,
+                        ci.cityiddepartament
+                    FROM public.geshHotels h
+                    LEFT JOIN public.geshcity ci
+                        ON h.hotCityId = ci.cityid
+                    WHERE h.hotCityId = @cityId
+                    ORDER BY h.hotName;";
 
                 using var command = new NpgsqlCommand(query, connection);
+
                 command.Parameters.AddWithValue("@cityId", cityId);
 
                 using var reader = command.ExecuteReader();
@@ -139,12 +184,26 @@ namespace BackCheilGestHotels.infra.repositories
                 using var connection = _database.GetConnection();
 
                 string query = @"
-                    SELECT hotId, hotName, hotDescription, hotAddress,
-                           hotPhone, hotEmail, hotCityId, hotRating,
-                           hotRateSign, hotIsActive,hotImages
-                    FROM public.geshHotels
-                    WHERE hotName ILIKE @name
-                    ORDER BY hotName;";
+                    SELECT
+                        h.hotId,
+                        h.hotName,
+                        h.hotDescription,
+                        h.hotAddress,
+                        h.hotPhone,
+                        h.hotEmail,
+                        h.hotCityId,
+                        h.hotRating,
+                        h.hotRateSign,
+                        h.hotIsActive,
+                        h.hotImages,
+                        ci.cityid,
+                        ci.cityname,
+                        ci.cityiddepartament
+                    FROM public.geshHotels h
+                    LEFT JOIN public.geshcity ci
+                        ON h.hotCityId = ci.cityid
+                    WHERE h.hotName ILIKE @name
+                    ORDER BY h.hotName;";
 
                 using var command = new NpgsqlCommand(query, connection);
 
@@ -209,7 +268,8 @@ namespace BackCheilGestHotels.infra.repositories
 
                 AddHotelParameters(command, hotel);
 
-                int newHotelId = Convert.ToInt32(command.ExecuteScalar());
+                int newHotelId = Convert.ToInt32(
+                    command.ExecuteScalar());
 
                 return $"Hotel created successfully. ID: {newHotelId}";
             }
@@ -233,7 +293,8 @@ namespace BackCheilGestHotels.infra.repositories
 
                 string query = @"
                     UPDATE public.geshHotels
-                    SET hotName = @name,
+                    SET
+                        hotName = @name,
                         hotDescription = @description,
                         hotAddress = @address,
                         hotPhone = @phone,
@@ -310,26 +371,45 @@ namespace BackCheilGestHotels.infra.repositories
             }
         }
 
-
+        // GET: Buscar hoteles por nombre y calificación
         public List<HotelDto> searchHotels(string? Name, int? Rating)
         {
+            var hotels = new List<HotelDto>();
+
             try
             {
                 using var connection = _database.GetConnection();
 
                 string query = @"
-            SELECT
-                h.hotId, h.hotName, h.hotDescription, h.hotAddress,
-                h.hotPhone, h.hotEmail, h.hotCityId, h.hotRating,
-                h.hotRateSign, h.hotIsActive, h.hotImages
-            FROM geshhotels h
-            WHERE
-                (NULLIF(@hotName, '') IS NULL
-                 OR h.hotName ILIKE '%' || @hotName || '%')
-                AND
-                (@hotRating IS NULL
-                 OR h.hotRating = @hotRating);
-        ";
+                    SELECT
+                        h.hotId,
+                        h.hotName,
+                        h.hotDescription,
+                        h.hotAddress,
+                        h.hotPhone,
+                        h.hotEmail,
+                        h.hotCityId,
+                        h.hotRating,
+                        h.hotRateSign,
+                        h.hotIsActive,
+                        h.hotImages,
+                        ci.cityid,
+                        ci.cityname,
+                        ci.cityiddepartament
+                    FROM public.geshHotels h
+                    LEFT JOIN public.geshcity ci
+                        ON h.hotCityId = ci.cityid
+                    WHERE
+                        (
+                            NULLIF(@hotName, '') IS NULL
+                            OR h.hotName ILIKE '%' || @hotName || '%'
+                        )
+                        AND
+                        (
+                            @hotRating IS NULL
+                            OR h.hotRating = @hotRating
+                        )
+                    ORDER BY h.hotName;";
 
                 using var command = new NpgsqlCommand(query, connection);
 
@@ -346,8 +426,6 @@ namespace BackCheilGestHotels.infra.repositories
 
                 using var reader = command.ExecuteReader();
 
-                List<HotelDto> hotels = new List<HotelDto>();
-
                 while (reader.Read())
                 {
                     hotels.Add(MapHotel(reader));
@@ -362,17 +440,24 @@ namespace BackCheilGestHotels.infra.repositories
             catch (Exception ex)
             {
                 throw new BackCheilGestHotelException(
-                    500, $"Error searching hotels: {ex.Message}", ex);
+                    500, "Error searching hotels.", ex);
             }
         }
-        // Mapear registro de PostgreSQL a HotelDto
+
+        // MAP: Mapear hotel y ciudad
         private static HotelDto MapHotel(NpgsqlDataReader reader)
         {
             return new HotelDto
             {
                 HotId = reader.GetInt32(0),
-                HotName = reader.GetString(1),
-                HotDescription = reader.GetString(2),
+
+                HotName = reader.IsDBNull(1)
+                    ? string.Empty
+                    : reader.GetString(1),
+
+                HotDescription = reader.IsDBNull(2)
+                    ? string.Empty
+                    : reader.GetString(2),
 
                 HotAddress = reader.IsDBNull(3)
                     ? string.Empty
@@ -398,17 +483,31 @@ namespace BackCheilGestHotels.infra.repositories
                     ? string.Empty
                     : reader.GetString(8),
 
-                HotIsActive = reader.GetBoolean(9),
+                HotIsActive = !reader.IsDBNull(9)
+                    && reader.GetBoolean(9),
 
                 hotImages = reader.IsDBNull(10)
                     ? string.Empty
                     : reader.GetString(10),
 
-                City = null!
+                City = reader.IsDBNull(11)
+                    ? null!
+                    : new CityDto
+                    {
+                        CityId = reader.GetInt32(11),
+
+                        CityName = reader.IsDBNull(12)
+                            ? string.Empty
+                            : reader.GetString(12),
+
+                        CityidDepartament = reader.IsDBNull(13)
+                            ? 0
+                            : reader.GetInt32(13)
+                    }
             };
         }
 
-        // Agregar parámetros para INSERT y UPDATE
+        // Parámetros para INSERT y UPDATE
         private static void AddHotelParameters(
             NpgsqlCommand command,
             HotelDto hotel)
@@ -436,15 +535,14 @@ namespace BackCheilGestHotels.infra.repositories
 
             command.Parameters.AddWithValue(
                 "@rating", hotel.HotRating);
-          
+
             command.Parameters.AddWithValue(
-                "@hotImages", hotel.hotImages);
+                "@hotImages",
+                (object?)hotel.hotImages ?? DBNull.Value);
 
             command.Parameters.AddWithValue(
                 "@rateSign",
                 (object?)hotel.HotRateSign ?? DBNull.Value);
         }
-
-     
     }
 }

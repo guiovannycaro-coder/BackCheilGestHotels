@@ -15,5 +15,7 @@ namespace BackCheilGestHotels.Domain.repository
         String UpdDocumentTypeAsync(DocumentTypeDto documentType);
 
         String DropDocumentTypeByIdAsync(int tipId);
+
+        string? GetDocumentTypeDescription(int dato);
     }
 }

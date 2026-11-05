@@ -2,6 +2,7 @@
 using BackCheilGestHotels.application.iservices;
 using BackCheilGestHotels.Domain.repository;
 using BackCheilGestHotels.infra.Exceptions;
+using BackCheilGestHotels.infra.repositories;
 
 namespace BackCheilGestHotels.application.services
 {
@@ -80,6 +81,32 @@ namespace BackCheilGestHotels.application.services
                 throw new BackCheilGestHotelException(
                     500,
                     "Error searching document types by name.",
+                    ex);
+            }
+        }
+
+        public string? GetDocumentTypeDescription(int dato)
+        {
+            try
+            {
+                String dt = _documentTypeRepository.GetDocumentTypeDescription(dato);
+
+                if (dt == null)
+                {
+                    return dt;
+                }
+
+                return dt;
+            }
+            catch (BackCheilGestHotelException)
+            {
+                throw;
+            }
+            catch (Exception ex)
+            {
+                throw new BackCheilGestHotelException(
+                    500,
+                    "An error occurred while retrieving the document type by ID.",
                     ex);
             }
         }

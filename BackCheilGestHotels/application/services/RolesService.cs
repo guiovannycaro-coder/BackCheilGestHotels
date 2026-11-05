@@ -35,6 +35,32 @@ namespace BackCheilGestHotels.application.services
             }
         }
 
+        public string? GetRolDescription(int dato)
+        {
+            try
+            {
+                String  role = _rolesRepository.GetRolDescription(dato);
+
+                if (role == null)
+                {
+                    return role;
+                }
+
+                return role;
+            }
+            catch (BackCheilGestHotelException)
+            {
+                throw;
+            }
+            catch (Exception ex)
+            {
+                throw new BackCheilGestHotelException(
+                    500,
+                    "An error occurred while retrieving the role by ID.",
+                    ex);
+            }
+        }
+
         // Consultar todos los roles
         public List<RolesDto> GetRoles()
         {
