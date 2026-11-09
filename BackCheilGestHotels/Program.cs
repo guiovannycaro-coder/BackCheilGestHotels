@@ -4,7 +4,7 @@ using BackCheilGestHotels.application.services;
 using BackCheilGestHotels.Domain.repository;
 using BackCheilGestHotels.infra.Persistence;
 using BackCheilGestHotels.infra.repositories;
-
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +15,10 @@ var connectionString =
 
 builder.Services.AddSingleton(
     new DatabaseConnection(connectionString));
+
+// Database Context - Entity Framework Core
+builder.Services.AddDbContext<HotelDbContext>(options =>
+    options.UseNpgsql(connectionString));
 
 // Repository
 builder.Services.AddScoped<IUsersRepository, UsersRepository>();

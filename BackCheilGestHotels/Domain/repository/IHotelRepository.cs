@@ -1,4 +1,5 @@
 ﻿using BackCheilGestHotels.application.entities;
+using BackCheilGestHotels.Domain.Models;
 
 namespace BackCheilGestHotels.Domain.repository
 {
@@ -18,5 +19,7 @@ namespace BackCheilGestHotels.Domain.repository
         String UpdHotel(HotelDto hotel);
 
         String DropHotelById(int hotId);
+
+        public List<Hotel> GetHotelsByRating(int rating);
     }
 }

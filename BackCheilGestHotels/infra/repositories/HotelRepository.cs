@@ -1,8 +1,10 @@
 ﻿
 using BackCheilGestHotels.application.entities;
+using BackCheilGestHotels.Domain.Models;
 using BackCheilGestHotels.Domain.repository;
 using BackCheilGestHotels.infra.Exceptions;
 using BackCheilGestHotels.infra.Persistence;
+using Microsoft.EntityFrameworkCore;
 using Npgsql;
 
 namespace BackCheilGestHotels.infra.repositories
@@ -10,10 +12,12 @@ namespace BackCheilGestHotels.infra.repositories
     public class HotelRepository : IHotelRepository
     {
         private readonly DatabaseConnection _database;
-
-        public HotelRepository(DatabaseConnection database)
+        private readonly HotelDbContext _context;
+        public HotelRepository(DatabaseConnection database,
+            HotelDbContext context)
         {
             _database = database;
+            _context = context;
         }
 
         // GET: Consultar todos los hoteles
@@ -543,6 +547,29 @@ namespace BackCheilGestHotels.infra.repositories
             command.Parameters.AddWithValue(
                 "@rateSign",
                 (object?)hotel.HotRateSign ?? DBNull.Value);
+        }
+
+        public List<Hotel> GetHotelsByRating(int rating)
+        {
+            try
+            {
+                var hotels = _context.Hotels
+                    .Include(h => h.City)
+                    .Where(h => h.HotRating == rating)
+                    .ToList();
+
+                return hotels;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+
+                throw new BackCheilGestHotelException(
+                    500,
+                    "Error retrieving hotels by rating. " + ex.Message,
+                    ex
+                );
+            }
         }
     }
 }

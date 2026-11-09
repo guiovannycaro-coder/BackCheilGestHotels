@@ -279,5 +279,51 @@ namespace BackCheilGestHotels.api.controllers
                         null));
             }
         }
+
+
+
+        [HttpGet("ObtenerPorCalificacion")]
+        [Produces("application/json")]
+        public IActionResult GetHotelsByRating([FromQuery] int rating)
+        {
+            try
+            {
+                List<Hotel> hotels = _hotelsService.GetHotelsByRating(rating);
+
+                if (hotels == null || hotels.Count == 0)
+                {
+                    return NotFound(new ApisResponse<string>(
+                        404,
+                        "No hotels found with the specified rating.",
+                        null
+                    ));
+                }
+
+                return Ok(new ApisResponse<List<Hotel>>(
+                    0,
+                    "Hotels retrieved successfully by rating.",
+                    hotels
+                ));
+            }
+            catch (BackCheilGestHotelException ex)
+            {
+                return StatusCode(500,
+                    new ApisResponse<string>(
+                        500,
+                        ex.Message,
+                        null
+                    ));
+            }
+            catch (Exception)
+            {
+                return StatusCode(500,
+                    new ApisResponse<string>(
+                        500,
+                        "An unexpected error occurred while retrieving hotels by rating.",
+                        null
+                    ));
+            }
+        }
+
     }
 }

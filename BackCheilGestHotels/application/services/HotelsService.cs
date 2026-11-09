@@ -134,6 +134,26 @@ namespace BackCheilGestHotels.application.services
             }
         }
 
+        public List<Hotel> GetHotelsByRating(int rating)
+        {
+            try
+            {
+                return _hotelRepository.GetHotelsByRating(rating);
+            }
+            catch (BackCheilGestHotelException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw new BackCheilGestHotelException(
+                    500,
+                    "Error al consultar los hoteles por calificación.",
+                    ex
+                );
+            }
+        }
+
         // Insertar hotel
         public int InsHotel(HotelDto hotel)
         {

@@ -1,4 +1,5 @@
 ﻿using BackCheilGestHotels.application.entities;
+using BackCheilGestHotels.Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BackCheilGestHotels.application.iservices
@@ -13,5 +14,7 @@ namespace BackCheilGestHotels.application.iservices
         List<HotelDto> GetHotelByName(string dato);
       
         List<HotelDto> BuscarHotels(string? Name, int? Rating);
+
+        List<Hotel> GetHotelsByRating(int rating);
     }
 }
